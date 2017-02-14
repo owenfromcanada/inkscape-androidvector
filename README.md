@@ -23,6 +23,16 @@ Copy the files `androidvector.py` and `androidvector.imx` to your extensions dir
 - Android vectors have slightly different opacity implementations.  Inkscape has three opacity values for paths: stroke, fill, and overall.  Android has no overall opacity, so this is combined with the stroke and fill opacities.
 - Android Studio has a function to reformat code.  If you need to modify any attributes in Android Studio, you can reformat the XML to make things easier on yourself.
 
+### Change Log
+
+#### 2017-02-14
+
+- Scientific notation does not work in certain versions of Android.  Updated to resize the viewbox, and eliminate very small values (e.g. `8.675309e-17` becomes `0.0`).
+
+#### 2017-01-06
+
+- Initial version
+
 ### Improvements
 
 - Currently only supports saving the entire document.  Would be helpful to migrate this extension to a more export-like tool, which would allow for exporting just a selection.

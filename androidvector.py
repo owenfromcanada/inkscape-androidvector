@@ -72,8 +72,15 @@ class AndroidVector(inkex.Effect):
             inkex.errormsg(_('The document viewBox attribute is not formatted correctly.'))
             return
         
-        vector.set(_ns('viewportWidth'), view_box_split[2])
-        vector.set(_ns('viewportHeight'), view_box_split[3])
+        # determine scale factor
+        view_width = float(view_box_split[2])
+        view_height = float(view_box_split[3])
+        scale_fact = 1000.0/max(view_width, view_height)
+        # set scale (remove need for scientific notation)
+        svg.set('transform', 'scale(%f %f)' % (scale_fact, scale_fact))
+        
+        vector.set(_ns('viewportWidth'), str(view_width * scale_fact))
+        vector.set(_ns('viewportHeight'), str(view_height * scale_fact))
         
         # parse child elements
         self.unique_id = 0
@@ -168,6 +175,15 @@ class AndroidVector(inkex.Effect):
                     st.applyTransformToPath(t, p)
             ancestors.pop()
             
+            # remove very small numbers (i.e. scientific notation)
+            for i in range(len(p)):
+                for j in range(len(p[i])):
+                    for k in range(len(p[i][j])):
+                        for l in range(len(p[i][j][k])):
+                            if 'e-' in str(p[i][j][k][l]).lower():
+                                p[i][j][k][l] = 0.0;
+            
+            # save path data in vector element
             el.set(_ns('pathData'), csp.formatPath(p))
             
             # parse styles
